@@ -1,0 +1,45 @@
+<div class="pages">
+    <!--
+    <div data-page="urenboeken" class="page no-toolbar no-navbar">
+    -->
+    <div data-page="indirecteureninvoeren" class="page">
+        <div class="page-content">
+
+            <div class="navbarpages">
+                <div class="nav_left_logo"><a href="index.html"><img src="images/tj/logo.png" alt="" title="" /></a></div>
+                <div class="nav_right_button"><a href="menu.html"><img src="images/icons/black/menu.png" alt="" title="" /></a></div>
+            </div>
+            <div id="pages_maincontent">
+                <div class="page_header">
+                    <table>
+                        <tr>
+                            <td class="title">Indirecte uren invoeren</td>
+                            <td class="userName">&nbsp;</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="page_content">
+                    <div class="contactform ureninvoeren">
+                        <div>
+                            <label>Datum</label>
+                            <input type="text" id="datumIndirect" value="" class="form_input" />
+                        </div>
+                        <div>
+                            <label>Indirecte uren</label>
+                            <select id="indirectId" class="form_select" style="background: #FFF;" onselect="fn(this.value)" onchange="ddlIndirectChanged(this.value);">
+                                <option value="-1">-- selecteer --</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Aantal uren</label>
+                            <input type="number" id="aantal" name="aantal" class="form_input" />
+                        </div>
+                        <input type="button" name="submit" class="form_submit" id="submit" value="Opslaan" onclick="IndirecteurenOpslaan();" />
+                        <p>&nbsp;</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
