@@ -372,7 +372,7 @@ function ToonUrenoverzichtItems() {
 
             ul += "<ul class=\"responsive_table urenoverzicht\" style='margin-bottom: 25px;'>";
             ul += "<li class='table_row'>";
-            ul += "<div class='table_section left'>";
+            ul += "<div class='table_section left dag'>";
             ul += "<span>" + dag.dag + " " + dag.korteMaandOmschrijving + "</span>";
             ul += "<span>" + dag.langeDagOmschrijving + "</span>";
             ul += "</div>";
