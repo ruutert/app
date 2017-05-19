@@ -16,7 +16,7 @@ function InitApp() {
     InitAjax();
 
     app = new Framework7({
-        cache : false
+        cache: false
     });
 
     prevWeek = getPrevWeek(today);
@@ -40,7 +40,7 @@ function InitApp() {
         calendar = app.calendar({
             input: '#datumIndirect',
             dateFormat: 'dd/mm/yyyy',
-            closeOnSelect : true
+            closeOnSelect: true
         });
 
         $.ajax({
@@ -164,7 +164,7 @@ function InitApp() {
         });
     });
 
- 
+
     myApp.onPageInit('*', function (page) {
 
         var cred = app.formGetData('credentials');
@@ -173,7 +173,7 @@ function InitApp() {
         }
     });
 
-   
+
     var storedCredentials = app.formGetData('credentials');
     try {
 
@@ -323,7 +323,7 @@ function ShowLoginScreen(storedCredentials) {
 }
 
 function getWeekNumber(d) {
-    
+
     d = new Date(+d);
     d.setHours(0, 0, 0, 0);
     d.setDate(d.getDate() + 4 - (d.getDay() || 7));
@@ -335,7 +335,7 @@ function getWeekNumber(d) {
 }
 
 function ToonUrenoverzicht(date) {
-    
+
     dateUrenoverzicht = date;
 
     prevWeek = getPrevWeek(dateUrenoverzicht);
@@ -384,17 +384,29 @@ function ToonUrenoverzichtItems() {
                 var project = dag.projecten[p];
                 var hasWerk = $.isArray(project.children) && project.children.length > 0;
 
-                ul += "<li>";
-                
-                if (project.isLowestLevel) {
-                    ul += "<div onclick='EditUren(" + project.invoerId + ");'>";
-                    ul += "   <div class=\"table_section left\">" + project.description + "</div>";
-                    ul += "   <div class='table_section right'>" + toonGetal(project.totaal) + "</div>";
-                    ul += "</div>";
-                } else {
-                    ul += "<div class=\"table_section left\">" + project.description + "</div>";
+                var css = "";
+                if (project.geblokkeerd) {
+                    css = " style='color: #a7a7a7;'"
                 }
-                
+
+                ul += "<li>";
+
+                if (project.isLowestLevel) {
+
+                    if (!project.geblokkeerd) {
+                        ul += "<div onclick='EditUren(" + project.invoerId + ");'>";
+                    } else {
+                        ul += "<div" + css + ">";
+                    }
+
+                    ul += "   <div" + css + " class=\"table_section left\">" + project.description + "</div>";
+                    ul += "   <div" + css + " class='table_section right'>" + toonGetal(project.totaal) + "</div>";
+                    ul += "</div>";
+
+                } else {
+                    ul += "<div" + css + " class=\"table_section left\">" + project.description + "</div>";
+                }
+
                 if (hasWerk) {
                     ul += "<ul style='margin-left: 0px;'>";
                     for (var w in project.children) {
@@ -406,13 +418,19 @@ function ToonUrenoverzichtItems() {
 
 
                         if (werk.isLowestLevel) {
-                            ul += "<div style='padding-left: 15px;' onclick='EditUren(" + werk.invoerId + ");'>";
-                            ul += "   <div class='table_section left' style='color: #000;'>" + werk.description + "</div>";
-                            ul += "   <div class='table_section right' style='color: #000;'>" + toonGetal(werk.totaal) + "</div>";
+
+                            if (!project.geblokkeerd) {
+                                ul += "<div" + css + " style='padding-left: 15px;' onclick='EditUren(" + werk.invoerId + ");'>";
+                            } else {
+                                ul += "<div" + css + " style='padding-left: 15px;'>";
+                            }
+
+                            ul += "   <div" + css + " class='table_section left' style='color: #000;'>" + werk.description + "</div>";
+                            ul += "   <div" + css + " class='table_section right' style='color: #000;'>" + toonGetal(werk.totaal) + "</div>";
                             ul += "</div>";
                         } else {
                             ul += "<div style='padding-left: 15px;'>";
-                            ul += "   <div class='table_section left' style='color: #000;'>" + werk.description + "</div>";
+                            ul += "   <div" + css + " class='table_section left' style='color: #000;'>" + werk.description + "</div>";
                             ul += "</div>";
                         }
 
@@ -427,13 +445,19 @@ function ToonUrenoverzichtItems() {
                                 ul += "<li>";
 
                                 if (budget.isLowestLevel) {
-                                    ul += "<div style='padding-left: 30px;' onclick='EditUren(" + budget.invoerId + ");'>";
-                                    ul += "   <div class='table_section left' style='color: #000;'>" + budget.code + " " + budget.description + "</div>";
-                                    ul += "   <div class='table_section right' style='color: #000;'>" + toonGetal(budget.totaal) + "</div>";
+
+                                    if (!project.geblokkeerd) {
+                                        ul += "<div style='padding-left: 30px;' onclick='EditUren(" + budget.invoerId + ");'>";
+                                    } else {
+                                        ul += "<div style='padding-left: 30px;'>";
+                                    }
+
+                                    ul += "   <div" + css + " class='table_section left'>" + budget.code + " " + budget.description + "</div>";
+                                    ul += "   <div" + css + " class='table_section right'>" + toonGetal(budget.totaal) + "</div>";
                                     ul += "</div>";
                                 } else {
                                     ul += "<div style='padding-left: 30px;'>";
-                                    ul += "   <div class='table_section left' style='color: #000;'>" + budget.code + " " + budget.description + "</div>";
+                                    ul += "   <div" + css + " class='table_section left'>" + budget.code + " " + budget.description + "</div>";
                                     ul += "</div>";
                                 }
 
@@ -549,11 +573,11 @@ function EditIndirecteUren(id) {
 
 function ToonIndirectboeken() {
     ResetFormFields();
-    mainView.router.loadPage('indirecteureninvoeren.html');    
+    mainView.router.loadPage('indirecteureninvoeren.html');
 }
 
 function ToonUrenboeken() {
-    
+
     ResetFormFields();
     mainView.router.loadPage('ureninvoeren.html');
 
