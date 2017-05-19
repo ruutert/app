@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<widget xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:vs="http://schemas.microsoft.com/appx/2014/htmlapps" id="io.cordova.myappe896ba" version="1.0.6" xmlns="http://www.w3.org/ns/widgets" defaultlocale="nl-NL">
+<widget xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:vs="http://schemas.microsoft.com/appx/2014/htmlapps" id="io.cordova.myappe896ba" version="1.0.7" xmlns="http://www.w3.org/ns/widgets" defaultlocale="nl-NL">
   <name>2Jours</name>
   <description>Met de urenapp van 2Jours kunt u op een eenvoudige manier uw uren boeken.</description>
   <author href="http://cordova.io" email="dev@cordova.apache.org">2Jours BV</author>
