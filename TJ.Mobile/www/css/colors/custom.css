@@ -22,7 +22,7 @@ table.rememberCredentials {
 }
 
 .popup, .page_content_menu {
-    /*background: #c7c7c7;*/
+    
 }
 
 .form_logo {
@@ -75,4 +75,15 @@ div.table_row {
 .ureninvoeren label {
     font-weight: normal;
     font-size: 90%;
+}
+
+ul.responsive_table li:first-child {
+    background-color: #375a70;
+    color: #000000;
+}
+ul.responsive_table .dag {
+    color: #FFFFFF;
+}
+.toolbar {
+    background-color: rgb(32, 30, 44);
 }
