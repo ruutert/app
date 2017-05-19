@@ -1,0 +1,89 @@
+.text-align-center {
+    text-align: center;
+}
+
+table.rememberCredentials {
+    border-collapse: collapse;
+    border-spacing: 0px;
+    width: 100%;
+}
+
+    table.rememberCredentials td {
+        padding: 0px;
+        vertical-align: middle;
+    }
+
+.text-align-right {
+    text-align: right;
+}
+
+.navbarpages {
+    background: #f7f7f7;
+}
+
+.popup, .page_content_menu {
+    
+}
+
+.form_logo {
+    opacity: 1;
+}
+
+.pad-right {
+    padding: 0 2% 0 0;
+}
+
+.urenoverzicht .table_section.left {
+    width: 70%;
+    white-space: nowrap;
+    float: left;
+    padding: 0 0 0 2%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+    .urenoverzicht .table_section.left span:last-child {
+        padding-left: 10px;
+    }
+
+.urenoverzicht .table_section.right {
+    width: 25%;
+    float: right;
+    text-align: right;
+    padding: 0 2% 0 0;
+}
+
+
+div.table_row {
+    width: 100%;
+    float: left;
+    clear: both;
+    line-height: 30px;
+    padding: 0px;
+    list-style: none;
+    margin: 0 0 1px 0;
+}
+
+.list-block .item-inner {
+    padding:0px;
+}
+
+.contactform select, .contactform input, .contactform date, .contactform number  {
+    font-size: 90%;
+    background: #FFFFFF;
+}
+.ureninvoeren label {
+    font-weight: normal;
+    font-size: 90%;
+}
+
+ul.responsive_table li:first-child {
+    background-color: #375a70;
+    color: #000000;
+}
+ul.responsive_table .dag {
+    color: #FFFFFF;
+}
+.toolbar {
+    background-color: rgb(32, 30, 44);
+}
