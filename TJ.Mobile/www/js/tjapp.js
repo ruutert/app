@@ -1,4 +1,4 @@
-﻿var baseUrl = "http://app.2jours.nl";
+﻿var baseUrl = "http://app.2jours.nl/";
 
 var loggedIn = null;
 var app;
@@ -365,10 +365,18 @@ function ToonUrenoverzichtItems() {
 
         var ul = "";
         var total = 0;
+        var info = null;
 
         for (var k in items) {
 
             var dag = items[k];
+
+            if (info == null) info = dag;
+
+            var totaalUrenPerDag = "";
+            if (dag.urenPerDag > 0) {
+                totaalUrenPerDag = "/" + (1 * dag.urenPerDag);
+            }
 
             ul += "<ul class=\"responsive_table urenoverzicht\" style='margin-bottom: 25px;'>";
             ul += "<li class='table_row'>";
@@ -376,7 +384,7 @@ function ToonUrenoverzichtItems() {
             ul += "<span>" + dag.dag + " " + dag.korteMaandOmschrijving + "</span>";
             ul += "<span>" + dag.langeDagOmschrijving + "</span>";
             ul += "</div>";
-            ul += "<div class='table_section right'>" + toonGetal(dag.totaal) + "</div>";
+            ul += "<div class='table_section right' style='color: white;'>" + toonGetal(dag.totaal) + totaalUrenPerDag + "</div>";
             ul += "</li>";
 
             for (var p in dag.projecten) {
@@ -496,13 +504,13 @@ function ToonUrenoverzichtItems() {
         }
 
         var color = "";
-        if (total >= 40) {
+        if (total >= info.urenPerWeek) {
             color = "green";
         } else {
             color = "red";
         }
 
-        $("#ingevuldeUren").html("ingevulde uren <span style='font-weight: bold;color: " + color + ";'>" + toonGetal(total) + "/40</span>");
+        $("#ingevuldeUren").html("ingevulde uren <span style='font-weight: bold;color: " + color + ";'>" + toonGetal(total) + "/" + info.urenPerWeek + "</span>");
 
         $("#week").html(week);
         $("#urenoverzicht").html(ul);
