@@ -9,7 +9,7 @@
     <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
     <link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" href="apple-touch-startup-image-640x1096.png">
     <title>2Jours Mobile App</title>
-    <link rel="stylesheet" href="css/framework7.css">
+    <link rel="stylesheet" href="css/framework7.css">    
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="css/colors/blue.css">
     <link rel="stylesheet" href="css/colors/custom.css">
@@ -145,7 +145,8 @@
                             <td style="width: 95%;" class="text-align-right"><div class="forgot_pass">&nbsp;</div></td>
                         </tr>
                     </table>
-                    <input type="button" name="submit" class="form_submit" id="submit" value="Aanmelden" onclick="GetSessionByLogin();" />
+                    <div id="err" style="margin-bottom: 10px;margin-top: 25px;display:none;">&nbsp;</div>
+                    <input type="button" name="submit" class="form_submit" id="submit" value="Aanmelden" onclick="GetSessionByLogin(this);" />
                 </form>
             </div>
             <!--

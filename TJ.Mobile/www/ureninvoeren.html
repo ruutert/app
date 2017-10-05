@@ -5,6 +5,43 @@
     <div data-page="ureninvoeren" class="page">
         <div class="page-content">
 
+            <script id="material-template" type="text/x-custom-template">
+                <div data-element="materialLine" id="materiaal_0">
+                    <div class="row">
+                        <div class="col-40">
+                            <div>
+                                <div>
+                                    <label>Aantal</label>
+                                    <input type="number" data-element="aantal" class="form_input" maxlength="10" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-60">
+                            <div>
+                                <label>Eenheid</label>
+                                <select style="background: #fff;" class="form_select" data-element="eenheid">
+                                    <option selected value="stuks">stuks</option>
+                                    <option value="m1">m1</option>
+                                    <option value="m2">m2</option>
+                                    <option value="doos">doos</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label>Materiaal</label>
+                        <input data-element="omschrijving" class="form_input" />
+                    </div>
+                    <div class="row">
+                        <div class="col-50">&nbsp;</div>
+                        <div class="col-50" style="text-align:right;padding-top:5px;"><span onclick="DeleteMaterialLine(this)" data-element="materiaalVerwijderen" id="verwijderen_0" style="color:red;text-decoration:underline;cursor:pointer;">verwijderen</span></div>
+                    </div>
+                    <div style="border-bottom: 1px solid #2560C6;margin-bottom: 10px;">
+                        &nbsp;
+                    </div>
+                </div>
+            </script>
+
             <div class="navbarpages">
                 <div class="nav_left_logo"><a href="index.html"><img src="images/tj/logo.png" alt="" title="" /></a></div>
                 <div class="nav_right_button"><a href="menu.html"><img src="images/icons/black/menu.png" alt="" title="" /></a></div>
@@ -58,11 +95,22 @@
                             <label>Aantal uren</label>
                             <input type="number" id="aantal" name="aantal" class="form_input" maxlength="2" />
                         </div>
+                        <div style="clear:both">
+                            <label>Opmerking</label>
+                            <textarea id="opmerking" class="form_textarea" rows="5" cols="30"></textarea>
+                        </div>
+                        <div id="addMaterial" style="display:block;">
+                            <a href="#" class="button button-big button-fill">Materiaal noteren</a>
+                        </div>
+                        <div id="material" style="display: none;">
+                            <div id="materialLines">
+                                &nbsp;
+                            </div>
+                            <div style="margin: 10px 0 10px 0">
+                                <a href="javascript:AddMaterialLine();" class="button button-big button-fill">Meer noteren</a>
+                            </div>
+                        </div>
 
-                        <!--
-                            <label>Message:</label>
-                            <textarea name="message" class="form_textarea" rows="" cols=""></textarea>
-                        -->
                         <input type="button" name="submit" class="form_submit" id="submit" value="Opslaan" onclick="UrenOpslaan();" />
                         <p>&nbsp;</p>
                     </div>
