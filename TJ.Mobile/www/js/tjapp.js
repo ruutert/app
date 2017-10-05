@@ -1,4 +1,4 @@
-﻿var baseUrl = "http://app.2jours.nl/";
+﻿var baseUrl = "http://app.2jours.nl";
 
 var loggedIn = null;
 var app;
@@ -10,6 +10,7 @@ var invoerUren;
 var calendar;
 var dateUrenoverzicht = new Date();
 var arrKeyCodes = [];
+var url = null;
 
 function InitApp() {
 
@@ -108,6 +109,14 @@ function InitApp() {
             return FormatDecimal(e);
         });
 
+        $("#addMaterial").click(function () {
+            var materialItems = $("#materialLines").find("div[data-element='materialLine']");
+            if (materialItems.length == 0) {
+                AddMaterialLine();
+            }
+            $("#material").toggle();
+        });
+
         $.ajax({
             async: false,
             type: "GET",
@@ -150,7 +159,18 @@ function InitApp() {
                         $("#uursoortId").val(invoerUren.uursoortId);
                     }
 
+                    $("#opmerking").val(invoerUren.opmerking);
+
                     $("#aantal").val(invoerUren.aantal);
+
+
+                    if ($.isArray(invoerUren.materialen)) {
+                        $("#material").show();
+                        for (var k in invoerUren.materialen) {
+                            var materiaal = invoerUren.materialen[k];
+                            AddMaterialLine(materiaal);
+                        }
+                    }
 
                 } else {
 
@@ -239,7 +259,7 @@ function setToken(request) {
     }
 }
 
-function GetSessionByLogin() {
+function GetSessionByLogin(el) {
 
     var relatieId = $("#relatieId").val();
     var gebruikersnaam = $("#gebruikersnaam").val();
@@ -267,23 +287,40 @@ function GetSessionByLogin() {
 
     wachtwoord = sha1(wachtwoord);
 
-    GetSession(relatieId, gebruikersnaam, wachtwoord, function (data) {
+    $("#err").hide();
+    $(el).val("even geduld a.u.b.");
+    $(el).prop("disabled", true);
 
-        var credentials = {
-            relatieId: relatieId,
-            gebruikersnaam: gebruikersnaam,
-            wachtwoord: wachtwoord,
-            stayLoggedIn: $("#stayLoggedIn").is(":checked") ? 1 : 0,
-            user: data
-        };
-        // debugger;
-        app.formStoreData('credentials', credentials);
+    setTimeout(function () {
+        GetSession(relatieId, gebruikersnaam, wachtwoord, function (data) {
 
-        ToonUrenoverzicht(new Date());
-    });
+            var credentials = {
+                relatieId: relatieId,
+                gebruikersnaam: gebruikersnaam,
+                wachtwoord: wachtwoord,
+                stayLoggedIn: $("#stayLoggedIn").is(":checked") ? 1 : 0,
+                user: data
+            };
+            // debugger;
+            app.formStoreData('credentials', credentials);
+            ToonUrenoverzicht(new Date());
+
+
+
+        }, function () {
+            $("#err").html("Aanmeldgegevens onjuist!").css({
+                "text-align": "center",
+                "display": "block"
+            });
+
+            $(el).val("Aanmelden");
+            $(el).prop("disabled", false);
+            return;
+        });
+    }, 100);
 }
 
-function GetSession(relatieId, gebruikersnaam, wachtwoord, fnCallBack) {
+function GetSession(relatieId, gebruikersnaam, wachtwoord, fnCallBack, fnError) {
 
     $.ajax({
         async: false,
@@ -303,6 +340,11 @@ function GetSession(relatieId, gebruikersnaam, wachtwoord, fnCallBack) {
 
             if (typeof (fnCallBack) === "function") {
                 return fnCallBack(data);
+            }
+        },
+        error: function () {
+            if (typeof (fnError) === "function") {
+                return fnError();
             }
         }
     });
@@ -441,8 +483,17 @@ function ToonUrenoverzichtItems() {
                             ul += "   <div" + css + " class='table_section left' style='color: #000;'>" + werk.description + "</div>";
                             ul += "</div>";
                         }
+                        
+                        if (typeof (werk.materialen) !== "undefined" && $.isArray(werk.materialen)) {
+                            for (var m in werk.materialen) {
+                                var materiaal = werk.materialen[m];
+                                var materiaalomschrijving = materiaal.aantal + " " + materiaal.eenheid + " " + materiaal.omschrijving;
 
-
+                                ul += "<div" + css + " style='padding-left: 30px;'>";
+                                ul += "   <div" + css + " class='table_section left' style='color: #000;'>" + materiaalomschrijving + "</div>";
+                                ul += "</div>";
+                            }
+                        }
 
                         if (hasBudgetten) {
 
@@ -654,6 +705,8 @@ function ddlProjectChanged(id) {
     ClearDDL(budgetId);
     ClearDDL(stelpostId);
 
+    $("#addMaterial").hide();
+
     for (var d in dataSource) {
         var project = dataSource[d];
         if (project.id == id) {
@@ -676,7 +729,9 @@ function ddlProjectChanged(id) {
 
                 stelpostId.attr("disabled", "disabled");
                 if (totalChildren == 1) {
-                    var firstWerkId = project.children[0].id;
+                    var firstWerk = project.children[0];
+                    var firstWerkId = firstWerk.id;
+
                     werkId.val(firstWerkId);
                     ddlWerkChanged(firstWerkId);
                 }
@@ -712,7 +767,7 @@ function ddlWerkChanged(id) {
         if (project.id == projectId.val() * 1) {
 
             for (var d in project.children) {
-
+                
                 var werk = project.children[d];
                 if (werk.id == werkId.val() * 1) {
 
@@ -724,6 +779,10 @@ function ddlWerkChanged(id) {
 
                     } else {
                         enabled = false;
+                    }
+
+                    if (werk.isRegiewerk) {
+                        $("#addMaterial").show();
                     }
                 }
             }
@@ -742,6 +801,27 @@ function ClearDDL(ddl) {
     ddl.removeAttr("disabled").attr("disabled", "disabled");
     ddl.find("option").each(function (i) { if (i > 0) $(this).remove(); });
 
+}
+
+function AddMaterialLine(materiaal) {
+    var template = $("#material-template").html();
+    template = $(template);
+    
+    if (typeof (materiaal) === "object" && materiaal != null) {
+        template.attr("id", "materiaal_" + materiaal.id);
+        template.find("input[data-element='omschrijving']").val(materiaal.omschrijving);
+        template.find("select[data-element='eenheid']").val(materiaal.eenheid);
+        template.find("input[data-element='aantal']").val(materiaal.aantal);
+        template.find("span[data-element='materiaalVerwijderen']").attr("id", "verwijderen_" + materiaal.id);
+    }
+    
+    $("#materialLines").append(template);
+}
+
+function DeleteMaterialLine(el) {
+    var id = $(el).attr("id").replace("verwijderen_", "");
+    var materialLine = $("#materiaal_" + id);
+    $(materialLine).remove();
 }
 
 function UrenOpslaan() {
@@ -806,17 +886,29 @@ function UrenOpslaan() {
     var datum = arr[2] + "-" + arr[1] + "-" + arr[0];
 
     var invoer = {
-        Id: 0,
-        MedewerkerId: cred.user.contactpersoonId,
-        Datum: datum,
-        ProjectId: projectId.val(),
-        WerkId: werkId.val(),
-        BudgetId: budgetId.val(),
-        StelpostId: stelpostId.val(),
-        UursoortId: $("#uursoortId").val(),
-        Aantal: $("#aantal").val()
+        id: 0,
+        medewerkerId: cred.user.contactpersoonId,
+        datum: datum,
+        projectId: projectId.val(),
+        werkId: werkId.val(),
+        budgetId: budgetId.val(),
+        stelpostId: stelpostId.val(),
+        uursoortId: $("#uursoortId").val(),
+        aantal: $("#aantal").val(),
+        opmerking: $("#opmerking").val(),
+        materialen : []
     };
 
+    $("div[data-element='materialLine']").each(function () {
+        invoer.materialen.push({
+            id: $(this).attr("id").replace("materiaal_", ""),
+            omschrijving: $(this).find("input[data-element='omschrijving']").val(),
+            eenheid: $(this).find("select[data-element='eenheid']").val(),
+            aantal: $(this).find("input[data-element='aantal']").val() * 1
+        });
+    });
+    
+    
     var fnPostInvoer = function () {
 
         var arr = $("#datum").val().split('/');
@@ -964,6 +1056,9 @@ function InitAjax() {
         beforeSend: function (xhr, req) {
 
             var token = getStore("token");
+
+            url = req.url;
+            $("#err").hide();
             if (req.url.toLowerCase().indexOf("/session") > 0) {
                 return;
             }
@@ -978,9 +1073,8 @@ function InitAjax() {
         },
         error: function (data, textStatus, request) {
             if (data.status == 401) {
-                var storedCredentials = app.formGetData('credentials');
-                ShowLoginScreen(storedCredentials);
-
+                // var storedCredentials = app.formGetData('credentials');
+                ShowLoginScreen();
                 return;
             }
             myApp.alert(data.status + " " + data.statusText, "");
@@ -1018,31 +1112,6 @@ function sha1(text) {
         myApp.alert(e.message, "");
     }
 }
-/*
-function calcHMAC() {
-    try {
-        var hmacText = document.getElementById("hmacInputText");
-        var hmacTextType = document.getElementById("hmacTextType");
-        var hmacKeyInput = document.getElementById("hmacInputKey");
-        var hmacKeyInputType = document.getElementById("hmacKeyType");
-        var hmacVariant = document.getElementById("hmacVariant");
-        var hmacOutputType = document.getElementById("hmacOutputType");
-        var hmacOutput = document.getElementById("hmacOutputText");
-        var hmacObj = new jsSHA(
-            hmacVariant.options[hmacVariant.selectedIndex].value,
-            hmacTextType.options[hmacTextType.selectedIndex].value
-        );
-        hmacObj.setHMACKey(
-            hmacKeyInput.value,
-            hmacKeyInputType.options[hmacKeyInputType.selectedIndex].value
-        );
-        hmacObj.update(hmacText.value);
-
-        hmacOutput.value = hmacObj.getHMAC(hmacOutputType.options[hmacOutputType.selectedIndex].value);
-    } catch (e) {
-        hmacOutput.value = e.message
-    }
-}*/
 
 function getProject() {
 
@@ -1092,13 +1161,3 @@ function GetMedewerkerId() {
     }
     return 0;
 }
-
-/*
-function TestMarcel() {
-    setTimeout(function () {
-        var docWidth = document.documentElement.clientWidth;
-        var docHeight = document.documentElement.clientHeight;
-        $("#test").text("w: " + docWidth + " -- h: " + docHeight);
-        TestMarcel();
-    }, 1000);
-}*/
