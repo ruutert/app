@@ -198,53 +198,6 @@
     <script type="text/javascript" src="js/jquery.swipebox.js"></script>
     <script type="text/javascript" src="js/email.js"></script>
     <script src="cordova.js"></script>
-    <script>
-        document.addEventListener("deviceready", onDeviceReady, false);
-
-        var pictureSource;   // picture source
-        var destinationType; // sets the format of returned value
-
-
-        function onDeviceReady() {
-            // pictureSource = navigator.camera.PictureSourceType;
-            // destinationType = navigator.camera.DestinationType;
-        }
-
-        function onPhotoDataSuccess(imageData) {
-            alert("Photo Data Success");
-            // Uncomment to view the base64-encoded image data
-            // console.log(imageData);
-
-            // Get image handle
-            //
-            var smallImage = document.getElementById('smallImage');
-
-            // Unhide image elements
-            //
-            smallImage.style.display = 'block';
-
-            $(smallImage).css({ "width": "50%" });
-
-            // Show the captured photo
-            // The inline CSS rules are used to resize the image
-            //
-            smallImage.src = "data:image/jpeg;base64," + imageData;
-        }
-
-        // A button will call this function
-        //
-        function capturePhoto() {
-            navigator.camera.getPicture(onPhotoDataSuccess, onFail, {
-                quality: 50,
-                destinationType: destinationType.DATA_URL
-            });
-        }
-
-        // Called if something bad happens.
-        //
-        function onFail(message) {
-            alert('Failed because: ' + message);
-        }
-    </script>
+    
 </body>
 </html>
